@@ -23,11 +23,12 @@ var _index = require("typeorm/index");
 
 var _dec, _dec2, _dec3, _dec4, _class, _class2, _descriptor, _descriptor2, _descriptor3, _temp;
 
-var Post = (_dec = (0, _typeorm.Entity)('posts'), _dec2 = (0, _index.PrimaryGeneratedColumn)('increment'), _dec3 = (0, _index.Column)('varchar'), _dec4 = (0, _index.Column)('text'), _dec(_class = (_class2 = (_temp = function Post() {
+var Post = (_dec = (0, _typeorm.Entity)('posts'), _dec2 = (0, _index.PrimaryGeneratedColumn)('increment'), _dec3 = (0, _index.Column)('varchar'), _dec4 = (0, _index.Column)('text'), _dec(_class = (_class2 = (_temp = function Post(attributes) {
   (0, _classCallCheck2["default"])(this, Post);
   (0, _initializerDefineProperty2["default"])(this, "id", _descriptor, this);
   (0, _initializerDefineProperty2["default"])(this, "title", _descriptor2, this);
   (0, _initializerDefineProperty2["default"])(this, "content", _descriptor3, this);
+  Object.assign(this, attributes);
 }, _temp), (_descriptor = (0, _applyDecoratedDescriptor2["default"])(_class2.prototype, "id", [_dec2], {
   configurable: true,
   enumerable: true,
