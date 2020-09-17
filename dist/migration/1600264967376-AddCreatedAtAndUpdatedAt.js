@@ -33,12 +33,12 @@ var AddCreatedAtAndUpdatedAt1600264967376 = /*#__PURE__*/function () {
                 _context.next = 2;
                 return queryRunner.addColumns('users', [new _index.TableColumn({
                   name: 'createdAt',
-                  type: 'time',
+                  type: 'timestamp',
                   isNullable: false,
                   "default": 'now()'
                 }), new _index.TableColumn({
                   name: 'updatedAt',
-                  type: 'time',
+                  type: 'timestamp',
                   isNullable: false,
                   "default": 'now()'
                 })]);
@@ -47,12 +47,12 @@ var AddCreatedAtAndUpdatedAt1600264967376 = /*#__PURE__*/function () {
                 _context.next = 4;
                 return queryRunner.addColumns('posts', [new _index.TableColumn({
                   name: 'createdAt',
-                  type: 'time',
+                  type: 'timestamp',
                   isNullable: false,
                   "default": 'now()'
                 }), new _index.TableColumn({
                   name: 'updatedAt',
-                  type: 'time',
+                  type: 'timestamp',
                   isNullable: false,
                   "default": 'now()'
                 })]);
@@ -61,12 +61,12 @@ var AddCreatedAtAndUpdatedAt1600264967376 = /*#__PURE__*/function () {
                 _context.next = 6;
                 return queryRunner.addColumns('comments', [new _index.TableColumn({
                   name: 'createdAt',
-                  type: 'time',
+                  type: 'timestamp',
                   isNullable: false,
                   "default": 'now()'
                 }), new _index.TableColumn({
                   name: 'updatedAt',
-                  type: 'time',
+                  type: 'timestamp',
                   isNullable: false,
                   "default": 'now()'
                 })]);
