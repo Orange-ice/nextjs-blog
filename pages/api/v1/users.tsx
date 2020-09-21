@@ -11,7 +11,7 @@ const Posts: NextApiHandler = async (req, res) => {
   const user = new User();
   user.username = username.trim();
   user.password = password;
-  user.passwordDigest = passwordConfirmation;
+  user.passwordConfirmation = passwordConfirmation;
   await user.validate();
   if (user.hasErrors()) {
     res.statusCode = 422;

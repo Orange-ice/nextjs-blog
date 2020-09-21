@@ -1,8 +1,17 @@
 import {Entity} from 'typeorm';
-import {Column, CreateDateColumn, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm/index';
+import {
+  BeforeInsert,
+  Column,
+  CreateDateColumn,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn
+} from 'typeorm/index';
 import {Comment} from './Comment';
 import {Post} from './Post';
 import {getDatabaseConnection} from '../../lib/getDatebaseConnection';
+import md5 from 'md5';
+import _ from 'lodash'
 
 @Entity('users')
 export class User {
@@ -35,7 +44,7 @@ export class User {
     const found = await (await getDatabaseConnection()).manager.find(
       User, {username: this.username}
     );
-    if (found) {
+    if (found.length > 0) {    // 没找到时 found 是个空数组
       this.errors.username.push('用户名已存在，不能重复注册');
     }
     if (this.username.trim() === '') {
@@ -67,5 +76,14 @@ export class User {
 
   hasErrors() {
     return !!Object.values(this.errors).find(v => v.length > 0);
+  }
+
+  @BeforeInsert()    // save 之前执行的操作
+  generatePasswordDigest(){
+    this.passwordDigest = md5(this.password)
+  }
+
+  toJSON(){
+    return  _.omit(this,['password','passwordConfirmation','passwordDigest','errors'])
   }
 }
