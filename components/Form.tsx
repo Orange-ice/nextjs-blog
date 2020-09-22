@@ -2,27 +2,31 @@ import React, {ChangeEventHandler, FormEventHandler, ReactChild} from 'react';
 
 
 type Props = {
-  onSubmit:FormEventHandler
-  fields:{
-    label:string
-    type:'text' | 'password'
-    value:string | number
-    onChange:ChangeEventHandler<HTMLInputElement>
-    errors:string[]
+  onSubmit: FormEventHandler
+  fields: {
+    label: string
+    type: 'text' | 'password' | 'textarea'
+    value: string | number
+    onChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>
+    errors: string[]
   }[]
-  button:ReactChild
+  button: ReactChild
 }
 
-export const Form:React.FC<Props> = (props)=>{
-  return(
+export const Form: React.FC<Props> = (props) => {
+  return (
     <form onSubmit={props.onSubmit}>
-      {props.fields.map((field,index) =>
+      {props.fields.map((field, index) =>
         <div key={index}>
           <label>{field.label}
-            <input type={field.type} value={field.value}
-              onChange={field.onChange}/>
+            {field.type === 'textarea' ?
+              <textarea onChange={field.onChange}>{field.value}</textarea>
+              :
+              <input type={field.type} value={field.value}
+                     onChange={field.onChange}/>
+            }
           </label>
-          {field.errors?.length>0 && <div>
+          {field.errors?.length > 0 && <div>
             {field.errors.join(',')}
           </div>}
         </div>
@@ -31,5 +35,5 @@ export const Form:React.FC<Props> = (props)=>{
         {props.button}
       </div>
     </form>
-  )
-}
+  );
+};

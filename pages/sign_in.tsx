@@ -17,7 +17,6 @@ const SignIn: NextPage<{user:User}> = (props) => {
   });
   const onSubmit = useCallback((e) => {
     e.preventDefault();
-    console.log('1111111');
     axios.post(`/api/v1/sessions`, formData)
       .then(() => {
         window.alert('登录成功');
