@@ -1,8 +1,9 @@
-import {GetServerSideProps, NextPage} from 'next';
+import {GetServerSideProps, GetServerSidePropsContext, NextApiRequest, NextPage} from 'next';
 import React, {useCallback, useState} from 'react';
 import axios, {AxiosResponse} from 'axios';
 import withSession from '../lib/withSession';
 import {User} from '../src/entity/User';
+import {ParsedUrlQuery} from 'querystring';
 
 const SignIn: NextPage<{user:User}> = (props) => {
   const [formData, setFormData] = useState({
@@ -70,8 +71,7 @@ const SignIn: NextPage<{user:User}> = (props) => {
 
 export default SignIn;
 
-// @ts-ignore
-export const getServerSideProps: GetServerSideProps = withSession(async (context) => {
+export const getServerSideProps: GetServerSideProps = withSession(async (context:NextApiRequest&GetServerSidePropsContext<ParsedUrlQuery>) => {
   // @ts-ignore
   const user = context.req.session.get('currentUser');
   return {
