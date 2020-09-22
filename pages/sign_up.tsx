@@ -14,12 +14,15 @@ const SignUp: NextPage = () => {
   const onSubmit = useCallback((e)=>{
     e.preventDefault()
     axios.post(`/api/v1/users`,formData)
-      .then(undefined,(error)=>{
+      .then(()=>{
+        window.alert('注册成功')
+        window.location.href = '/sign_in'
+      },(error)=>{
         if(error.response){
           const response :AxiosResponse= error.response
           if(response.status === 422){
             console.log(response.data);
-            setErrors({...errors,...response.data})
+            setErrors(response.data)
           }
         }
       })
