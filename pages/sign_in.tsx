@@ -1,22 +1,14 @@
 import {GetServerSideProps, GetServerSidePropsContext, NextApiRequest, NextPage} from 'next';
-import React, {useCallback, useState} from 'react';
+import React from 'react';
 import axios, {AxiosResponse} from 'axios';
 import withSession from '../lib/withSession';
 import {User} from '../src/entity/User';
 import {ParsedUrlQuery} from 'querystring';
-import {Form} from '../components/Form';
+import {useForm} from '../hooks/useForm';
 
-const SignIn: NextPage<{user:User}> = (props) => {
-  const [formData, setFormData] = useState({
-    username: '',
-    password: '',
-  });
-
-  const [errors, setErrors] = useState({
-    username: [], password: []
-  });
-  const onSubmit = useCallback((e) => {
-    e.preventDefault();
+const SignIn: NextPage<{ user: User }> = (props) => {
+  const initFormData = {username: '', password: ''};
+  const onSubmit = (formData: typeof initFormData) => {
     axios.post(`/api/v1/sessions`, formData)
       .then(() => {
         window.alert('登录成功');
@@ -28,10 +20,19 @@ const SignIn: NextPage<{user:User}> = (props) => {
           }
         }
       });
-  }, [formData]);
-  const onChange = useCallback((key,value)=>{
-    setFormData({...formData,[key]:value})
-  },[formData])
+  };
+
+  const {form, setErrors} = useForm({
+    initFormData,
+    onSubmit,
+    fields: [
+      {label: '用户名', type: 'text', key: 'username'},
+      {label: '密码', type: 'password', key: 'password'}
+    ],
+    buttons: <button type="submit">登录</button>
+  });
+
+
   return (
     <>
       {props.user &&
@@ -40,27 +41,15 @@ const SignIn: NextPage<{user:User}> = (props) => {
       </div>
       }
       <h1>登录</h1>
-      <Form onSubmit={onSubmit} fields={[
-        {
-          label:'用户名',type:'text',value:formData.username,
-          onChange:e=>onChange('username',e.target.value),
-          errors:errors.username
-        },
-        {
-          label:'密码',type:'password',value:formData.password,
-          onChange:e=>onChange('password',e.target.value),
-          errors:errors.password
-        }
-      ]} button={<>
-        <button type="submit">登录</button>
-      </>}/>
+
+      {form}
     </>
   );
 };
 
 export default SignIn;
 
-export const getServerSideProps: GetServerSideProps = withSession(async (context:NextApiRequest&GetServerSidePropsContext<ParsedUrlQuery>) => {
+export const getServerSideProps: GetServerSideProps = withSession(async (context: NextApiRequest & GetServerSidePropsContext<ParsedUrlQuery>) => {
   // @ts-ignore
   const user = context.req.session.get('currentUser');
   return {
