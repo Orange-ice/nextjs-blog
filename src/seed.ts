@@ -25,6 +25,7 @@ createConnection().then(async connection => {
   c1.content = '这是文章1的评论内容';
   await manager.save(c1);
 
-  connection.close();
+  await connection.close();
+  console.log('OK');
 
 }).catch(error => console.log(error));
