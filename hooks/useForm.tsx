@@ -1,4 +1,5 @@
 import React, {ReactChild, useCallback, useState} from 'react';
+import {AxiosResponse} from 'axios';
 
 type Field<T> = {
   label: string;
@@ -10,11 +11,14 @@ type useFormOptions<T> = {
   initFormData: T;
   fields: Field<T>[];
   buttons: ReactChild;
-  onSubmit: (fs: T) => void
+  submit:{
+    request:(forData:T)=>Promise<AxiosResponse<T>>,
+    message:string
+  }
 }
 
 export function useForm<T>(options: useFormOptions<T>) {
-  const {initFormData, fields, buttons, onSubmit} = options;
+  const {initFormData, fields, buttons, submit} = options;
   // 非受控
   const [formData, setFormData] = useState(initFormData);
   const [errors, setErrors] = useState(() => {
@@ -33,8 +37,17 @@ export function useForm<T>(options: useFormOptions<T>) {
 
   const _onSubmit = useCallback((e) => {
     e.preventDefault();
-    onSubmit(formData);
-  }, [onSubmit, formData]);
+    submit.request(formData).then(()=>{
+      window.alert(submit.message)
+    },(error)=>{
+      if(error.response){
+        const response :AxiosResponse= error.response
+        if(response.status === 422){
+          setErrors(response.data)
+        }
+      }
+    })
+  }, [submit,formData]);
 
   const form = (
     <form onSubmit={_onSubmit}>
