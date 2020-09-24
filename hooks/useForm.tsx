@@ -11,9 +11,9 @@ type useFormOptions<T> = {
   initFormData: T;
   fields: Field<T>[];
   buttons: ReactChild;
-  submit:{
-    request:(forData:T)=>Promise<AxiosResponse<T>>,
-    message:string
+  submit: {
+    request: (forData: T) => Promise<AxiosResponse<T>>,
+    success: () => void
   }
 }
 
@@ -37,17 +37,19 @@ export function useForm<T>(options: useFormOptions<T>) {
 
   const _onSubmit = useCallback((e) => {
     e.preventDefault();
-    submit.request(formData).then(()=>{
-      window.alert(submit.message)
-    },(error)=>{
-      if(error.response){
-        const response :AxiosResponse= error.response
-        if(response.status === 422){
-          setErrors(response.data)
+    submit.request(formData).then(submit.success,
+      (error) => {
+        if (error.response) {
+          const response: AxiosResponse = error.response;
+          if (response.status === 422) {
+            setErrors(response.data);
+          } else if (response.status === 401) {
+            window.alert('请先登录');
+            window.location.href = `/sign_in?returnTo=${encodeURIComponent(window.location.pathname)}`;
+          }
         }
-      }
-    })
-  }, [submit,formData]);
+      });
+  }, [submit, formData]);
 
   const form = (
     <form onSubmit={_onSubmit}>
@@ -56,7 +58,7 @@ export function useForm<T>(options: useFormOptions<T>) {
           <label>{field.label}
             {field.type === 'textarea' ?
               <textarea value={formData[field.key].toString()}
-                        onChange={(e) => {onChange(field.key, e.target.value);}} />
+                        onChange={(e) => {onChange(field.key, e.target.value);}}/>
               :
               <input type={field.type} value={formData[field.key].toString()}
                      onChange={(e) => {onChange(field.key, e.target.value);}}/>
