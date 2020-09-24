@@ -19,7 +19,6 @@ const Posts: NextApiHandler = withSession(async (req, res) => {
     const connection = await getDatabaseConnection();
     await connection.manager.save(post);
     res.json(post);
-    console.log('6666666');
   }
 });
 export default Posts;
