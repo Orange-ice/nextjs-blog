@@ -1,4 +1,4 @@
-import {GetServerSideProps, NextPage} from 'next';
+import {GetServerSideProps, GetServerSidePropsContext, NextPage} from 'next';
 import {UAParser} from 'ua-parser-js';
 import React from 'react';
 import {getDatabaseConnection} from 'lib/getDatebaseConnection';
@@ -6,21 +6,26 @@ import {Post} from 'src/entity/Post';
 import Link from 'next/link';
 import qs from 'querystring';
 import {usePager} from '../../hooks/usePager';
+import withSession from '../../lib/withSession';
 
 type Props = {
   posts: Post[],
   count: number,
   perPage: number,
   page: number,
-  totalPage: number
+  totalPage: number,
+  currentUser: User | null
 }
 const PostsIndex: NextPage<Props> = (props) => {
-  const {posts, count, page, totalPage} = props;
+  const {currentUser,posts, count, page, totalPage} = props;
   const {pager} = usePager({page, totalPage});
   return (
     <>
       <div className="posts">
-        <h1>文章列表(总文章数{props.count} 每页{props.perPage})</h1>
+        <header>
+          <h1>文章列表(总文章数{props.count} 每页{props.perPage})</h1>
+          {currentUser && <Link href="/posts/new"><a>新增文章</a></Link>}
+        </header>
         {posts.map(post =>
           <div className="onePost">
             <Link key={post.id} href={`/posts/${post.id}`}>
@@ -52,17 +57,25 @@ const PostsIndex: NextPage<Props> = (props) => {
         .onePost > a:hover{
           color:#00adb5
         }
+        .posts > header{
+          display: flex;
+          align-items: center;
+        }
+        .posts > header > h1{
+          margin-right: auto;
+        }
       `}</style>
     </>
   );
 };
 export default PostsIndex;
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = withSession(async (context:GetServerSidePropsContext) => {
   const index = context.req.url.indexOf('?');
   const search = context.req.url.substr(index + 1);
   const query = qs.parse(search);
   const page = parseInt(query.page?.toString()) || 1;
+  const currentUser = (context.req as any).session.get('currentUser')  // 传给前端根据是否登录展示不同页面
   const connection = await getDatabaseConnection();
   const perPage = 10;
   const [posts, count] = await connection.manager.findAndCount(Post,
@@ -71,6 +84,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const result = new UAParser(ua).getResult();
   return {
     props: {
+      currentUser,
       browser: result.browser,
       posts: JSON.parse(JSON.stringify(posts)),
       count,
@@ -79,4 +93,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       totalPage: Math.ceil(count / perPage)
     }
   };
-};
+});
