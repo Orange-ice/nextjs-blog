@@ -1,5 +1,20 @@
-body{
-  h1{
-    color: blue!important;
-  }
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+*:after,*:before{
+  box-sizing: border-box;
+}
+
+h1{
+  color: steelblue;
+}
+a{
+  text-decoration: none;
+  color: cornflowerblue;
+}
+
+a, input , button{
+  font: inherit;
 }
