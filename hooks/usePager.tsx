@@ -23,7 +23,7 @@ export const usePager = (options: Options) => {
     .reduce((result, n) => n - (result[result.length - 1] || 0) === 1 ?
       result.concat(n) : result.concat(-1, n), []);
 
-  const pager = (
+  const pager = totalPage>1 ? (
     <div className="wrapper">
 
       {page !== 1 && <Link href={urlMaker(page - 1)}><a>上一页</a></Link>}
@@ -41,13 +41,14 @@ export const usePager = (options: Options) => {
       <style jsx>{`
         .wrapper{
           margin: 0 -8px;
+          padding: 8px 0;
         }
         .wrapper > a , .wrapper > span{
           margin:0 8px;
         }
       `}</style>
     </div>
-  );
+  ) : null;
 
   return {pager};
 };
