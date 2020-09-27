@@ -13,16 +13,28 @@ const PostsNew: NextPage = () => {
     buttons: <button type="submit">提交</button>,
     submit: {
       request: formData => axios.post(`/api/v1/posts`, formData),
-      success:()=>{
-        window.alert('提交成功')
-        window.location.href = '/posts'
+      success: () => {
+        window.alert('提交成功');
+        window.location.href = '/posts';
       }
     }
   });
 
   return (
-    <div>
-      {form}
+    <div className="postNew">
+      <div className="form-wrapper">
+        {form}
+      </div>
+
+      <style jsx global>{`
+        .form-wrapper{
+          padding: 16px;
+        }
+        .postNew .field-content textarea{
+          height: 30em;
+          resize: none;
+        }
+      `}</style>
     </div>
   );
 };
