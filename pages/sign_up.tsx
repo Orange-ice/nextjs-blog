@@ -36,6 +36,7 @@ const SignUp: NextPage = () => {
           {form}
         </div>
         <p className="signUpTip">已有账号？<Link href="/sign_in"><a>点击登录</a></Link></p>
+        <p><Link href="/posts"><a className="signUpA">返回文章列表</a></Link></p>
       </div>
 
       <style jsx global>{`
@@ -71,6 +72,13 @@ const SignUp: NextPage = () => {
         .signUp p{
           text-align: center;
           margin-top: 16px;
+        }
+        .signUp .signUpA{
+          color: palevioletred;
+          font-weight: bold;
+        }
+        .signUp .signUpA:hover{
+          color: mediumslateblue;
         }
       `}</style>
     </>
