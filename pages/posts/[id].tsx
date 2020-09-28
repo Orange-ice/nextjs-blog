@@ -36,6 +36,7 @@ const postsShow: NextPage<Props> = (props) => {
             <Link href="/posts" as={`/posts`}><a>文章列表</a></Link>
           </p>
           }
+          {!currentUser && <p><Link href="/posts" as={`/posts`}><a className="backList">返回文章列表</a></Link></p>}
         </header>
 
         <article className="markdown-body" dangerouslySetInnerHTML={ {__html: marked(post.content)} }>
@@ -58,6 +59,13 @@ const postsShow: NextPage<Props> = (props) => {
           max-width: 800px;
           margin: 16px auto;
           padding: 0 16px;
+        }
+        .wrapper .backList{
+          font-weight: bold;
+          color: palevioletred;
+        }
+        .wrapper .backList:hover{
+          color: #7489D2;
         }
         h1{
           padding-bottom: 16px;
