@@ -19,7 +19,7 @@ const PostEdit:NextPage<Props> = (props)=>{
     ],
     buttons: <div className="actions"><button type="submit">提交</button></div>,
     submit: {
-      request: formData => axios.patch(`/api/v1/posts/${id}`, formData),
+      request: formData => axios.patch(`/api/v1/posts/${id}`, {...formData,id}),
       success: () => {
         window.alert('提交成功');
         window.location.href = '/posts';
@@ -71,8 +71,7 @@ export default PostEdit
 export const getServerSideProps:GetServerSideProps = async (context)=>{
   const {id} = context.params
   const connection = await getDatabaseConnection()
-  const post = connection.manager.findOne('Post',id)
-
+  const post = await connection.manager.findOne('Post',id)
   return{
     props:{
       id:parseInt(id.toString()),
