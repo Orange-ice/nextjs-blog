@@ -17,7 +17,7 @@ type Props = {
   currentUser: User | null
 }
 const PostsIndex: NextPage<Props> = (props) => {
-  const {currentUser,posts, count, page, totalPage} = props;
+  const {currentUser, posts, count, page, totalPage} = props;
   const {pager} = usePager({page, totalPage});
   return (
     <>
@@ -25,6 +25,11 @@ const PostsIndex: NextPage<Props> = (props) => {
         <header>
           <h1>文章列表(总文章数{props.count} 每页{props.perPage})</h1>
           {currentUser && <Link href="/posts/new"><a>新增文章</a></Link>}
+          {!currentUser &&
+          <div className="links">
+            <Link href="/sign_in"><a className="signIn">登录</a></Link>
+            <Link href="/sign_up"><a>注册</a></Link>
+          </div>}
         </header>
         {posts.map(post =>
           <div className="onePost" key={post.id}>
@@ -60,9 +65,13 @@ const PostsIndex: NextPage<Props> = (props) => {
         .posts > header{
           display: flex;
           align-items: center;
+          font-weight: bold;
         }
         .posts > header > h1{
           margin-right: auto;
+        }
+        .posts header .links .signIn{
+          margin-right: 16px;
         }
       `}</style>
     </>
@@ -70,12 +79,12 @@ const PostsIndex: NextPage<Props> = (props) => {
 };
 export default PostsIndex;
 
-export const getServerSideProps: GetServerSideProps = withSession(async (context:GetServerSidePropsContext) => {
+export const getServerSideProps: GetServerSideProps = withSession(async (context: GetServerSidePropsContext) => {
   const index = context.req.url.indexOf('?');
   const search = context.req.url.substr(index + 1);
   const query = qs.parse(search);
   const page = parseInt(query.page?.toString()) || 1;
-  const currentUser = (context.req as any).session.get('currentUser')  // 传给前端根据是否登录展示不同页面
+  const currentUser = (context.req as any).session.get('currentUser') || null;  // 传给前端根据是否登录展示不同页面
   const connection = await getDatabaseConnection();
   const perPage = 10;
   const [posts, count] = await connection.manager.findAndCount(Post,

@@ -2,6 +2,7 @@ import {NextPage} from 'next';
 import React from 'react';
 import axios from 'axios';
 import {useForm} from '../../hooks/useForm';
+import Link from 'next/link';
 
 const PostsNew: NextPage = () => {
   const {form} = useForm({
@@ -22,16 +23,31 @@ const PostsNew: NextPage = () => {
 
   return (
     <div className="postNew">
-      <h1>创建文章</h1>
+      <header>
+        <Link href="/posts"><a>返回文章列表</a></Link>
+        <h1>创建文章</h1>
+      </header>
       <div className="form-wrapper">
         {form}
       </div>
 
       <style jsx global>{`
+        .postNew{
+          padding-top: 8px;
+        }
         .form-wrapper{
           padding: 16px;
         }
-        .postNew > h1{
+        .postNew  header > a{
+          font-weight: bolder;
+          color: mediumvioletred;
+          margin-left: 16px;
+          display: inline-block;
+        }
+        .postNew  header > a:hover{
+          color: blueviolet;
+        }
+        .postNew  header > h1{
           margin: 16px 16px 0;
           text-align: center;
         }

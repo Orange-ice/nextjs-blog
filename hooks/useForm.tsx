@@ -67,7 +67,7 @@ export function useForm<T>(options: useFormOptions<T>) {
                      onChange={(e) => {onChange(field.key, e.target.value);}}/>
             }
           </label>
-          {errors[field.key]?.length > 0 && <div>
+          {errors[field.key]?.length > 0 && <div className="errors">
             {errors[field.key].join(',')}
           </div>}
         </div>
@@ -93,6 +93,10 @@ export function useForm<T>(options: useFormOptions<T>) {
         }
         .label > .control{
           width: 100%;
+        }
+        .errors {
+          color: orangered;
+          font-size: small;
         }
       `}</style>
     </form>
