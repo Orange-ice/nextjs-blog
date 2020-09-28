@@ -9,6 +9,17 @@ const Posts: NextApiHandler = withSession(async (req, res) => {
     const post = new Post();
     post.title = title;
     post.content = content;
+    if(post.title === ''){
+      res.statusCode = 406;
+      res.end();
+      return;
+    }
+    if(post.content === ''){
+      res.statusCode = 406;
+      res.end();
+      return;
+    }
+
     const user = req.session.get('currentUser');
     if (!user) {
       res.statusCode = 401;

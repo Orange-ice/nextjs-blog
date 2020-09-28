@@ -48,6 +48,8 @@ export function useForm<T>(options: useFormOptions<T>) {
           } else if (response.status === 401) {
             window.alert('请先登录');
             window.location.href = `/sign_in?returnTo=${encodeURIComponent(window.location.pathname)}`;
+          } else if(response.status === 406){
+            window.alert('请输入文章标题或内容')
           }
         }
       });
